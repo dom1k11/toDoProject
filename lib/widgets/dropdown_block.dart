@@ -9,14 +9,18 @@ class Priority {
 }
 
 final List<Priority> dropdownList = [
-  Priority('High', Colors.red, Icons.warning), // Иконка для высокого приоритета
-  Priority('Medium', Colors.yellow, Icons.info), // Иконка для среднего приоритета
-  Priority('Low', Colors.green, Icons.flag_circle), // Иконка для низкого приоритета
+  Priority('High', Colors.red, Icons.warning),
+  // Иконка для высокого приоритета
+  Priority('Medium', Colors.yellow, Icons.info),
+  // Иконка для среднего приоритета
+  Priority('Low', Colors.green, Icons.flag_circle),
+  // Иконка для низкого приоритета
 ];
 
-
 class DropdownMenuBlock extends StatefulWidget {
-  const DropdownMenuBlock({super.key});
+  const DropdownMenuBlock({super.key, required this.onPrioritySelected});
+
+  final Function(String) onPrioritySelected;
 
   @override
   State<DropdownMenuBlock> createState() => _DropdownMenuBlockState();
@@ -46,6 +50,9 @@ class _DropdownMenuBlockState extends State<DropdownMenuBlock> {
           setState(() {
             dropdownValue = value; // value теперь является String?
           });
+          if (value != null) {
+            widget.onPrioritySelected(value); // Вызываем колбэк с выбранным значением
+          }
         },
         items: dropdownList.map((priority) {
           return DropdownMenuItem<String>(
@@ -53,7 +60,7 @@ class _DropdownMenuBlockState extends State<DropdownMenuBlock> {
             child: Row(
               children: [
                 Icon(priority.icon, color: priority.color), // Иконка приоритета
-                SizedBox(width: 10), // Отступ между иконкой и текстом
+                const SizedBox(width: 10), // Отступ между иконкой и текстом
                 Text(
                   priority.name, // Название приоритета
                   style: TextStyle(color: priority.color), // Применяем цвет

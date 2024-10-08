@@ -4,13 +4,13 @@ class Task {
   String taskDescription;
   bool isCompleted;
   String priority;
-  DateTime? dateTime;
+  DateTime dateTime;
 
   Task({
     required this.id,
     required this.taskName,
     this.taskDescription = "No Description",
-    this.dateTime,
+    required this.dateTime,
     required this.priority,
     this.isCompleted = false,
   });

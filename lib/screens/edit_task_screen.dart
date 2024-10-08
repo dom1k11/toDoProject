@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_app_practice_2/widgets/dropdown_block.dart';
 
 class EditTaskPage extends StatefulWidget {
   const EditTaskPage({super.key});
@@ -22,13 +21,13 @@ class _EditTaskPageState extends State<EditTaskPage> {
           buildTaskDescriptionContainer(),
           buildDateContainer(),
           //   buildDropdownContainer(),
-          const DropdownMenuBlock(),
+         // const DropdownMenuBlock(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: const Icon(Icons.add),
         backgroundColor: Colors.blueAccent,
+        child: const Icon(Icons.add),
       ),
     );
   }

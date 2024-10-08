@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:intl/intl.dart';
+
 import 'package:to_do_app_practice_2/models/task.dart';
 import 'package:to_do_app_practice_2/services/task_service.dart';
+import 'package:intl/intl.dart';
 
-import '../screens/home_screen.dart';
 import '../utils/task_helpers.dart';
 
 class TaskTileWidget extends StatelessWidget {
@@ -31,7 +31,9 @@ class TaskTileWidget extends StatelessWidget {
               label: 'Delete',
             ),
             SlidableAction(
-              onPressed: (context) { Navigator.pushNamed(context, '/edit_task_screen');},
+              onPressed: (context) {
+                Navigator.pushNamed(context, '/edit_task_screen');
+              },
               backgroundColor: const Color(0xFF21B7CA),
               foregroundColor: Colors.white,
               icon: Icons.edit_note,
@@ -48,16 +50,20 @@ class TaskTileWidget extends StatelessWidget {
                 leading: const Icon(Icons.check_box_outline_blank_outlined),
                 title: Row(
                   children: [
-                    getPriorityIcon(oneTask.priority),
-                    SizedBox(width: 5),
                     Text(oneTask.taskName),
+                    const SizedBox(width: 5),
+                       getPriorityIcon(oneTask.priority),
                   ],
                 ),
                 subtitle: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(oneTask.taskDescription),
-                   // Text(DateFormat('dd MMMM yyyy').format(oneTask.dateTime))
+                    SizedBox(width: 10),
+                    Text(
+                      DateFormat('MMM d, yyyy').format(oneTask.dateTime), // Форматируем для отображения
+                    ),
                   ],
                 ),
                 trailing: const Icon(Icons.arrow_left),

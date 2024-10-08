@@ -3,7 +3,7 @@ import 'package:to_do_app_practice_2/screens/edit_task_screen.dart';
 import 'package:to_do_app_practice_2/screens/new_task_screen.dart';
 import '../screens/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
