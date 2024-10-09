@@ -78,7 +78,7 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
                         setCompleted(
                             widget.oneTask.id, widget.oneTask.isCompleted);
                       },
-                      icon: Icon(Icons.check_box_outline_blank)),
+                      icon: Icon(Icons.check_box_outline_blank_outlined)),
                   title: Row(
                     children: [
                       Text(
