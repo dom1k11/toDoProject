@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_app_practice_2/models/task.dart';
-import 'package:to_do_app_practice_2/services/task_service.dart';
 import 'package:to_do_app_practice_2/widgets/search_block.dart';
 import 'package:to_do_app_practice_2/widgets/task_tile.dart';
+import 'package:page_transition/page_transition.dart';
 
 import '../buttons/custom_floating_action_button.dart';
 
@@ -14,7 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,54 +32,66 @@ class _HomePageState extends State<HomePage> {
             ),
             child: const SearchBlockWidget(), //Виджет Поиска
           ),
-          const Text(
-            "Pending Tasks",
-            style: TextStyle(
-              fontSize: 30,
-              color: Color.fromARGB(255, 208, 188, 213),
-            ),
+          Divider(
+            color: Colors.grey.shade800,
           ),
-          const Divider(),
           Expanded(
-            child: FutureBuilder<List<Task>>(
-              future: getTasks(), // Асинхронная операция
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<Task>> snapshot) {
-                // Логика отображения в зависимости от состояния snapshot
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('toDoTasks')
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
-                      child:
-                      CircularProgressIndicator()); // Показать индикатор загрузки
+                    child: CircularProgressIndicator(),
+                  ); // Показать индикатор загрузки
                 } else if (snapshot.hasError) {
                   return Center(
-                      child:
-                      Text('Ошибка: ${snapshot.error}')); // Показать ошибку
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    child: Text('Ошибка: ${snapshot.error}'),
+                  ); // Показать ошибку
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Center(
-                      child: Text('Нет данных.')); // Сообщение, если данных нет
+                    child: Text(
+                      'You do not have any tasks, try to add a new one?',
+                      style: TextStyle(color: Colors.orange),
+                    ),
+                  ); // Сообщение, если данных нет
                 }
 
-                // Если данные успешно получены, отобразить их в ListView
-                List<Task> tasks = snapshot.data!;
+                // Получаем список документов из snapshot
+                List<DocumentSnapshot> docs = snapshot.data!.docs;
+
+                // Преобразуем документы в список задач
+                List<Task> tasks = docs.map((doc) {
+                  return Task(
+                    id: doc.id,
+                    taskName: doc['task_name'],
+                    taskDescription: doc['task_description'],
+                    dateTime: (doc['DateTime'] as Timestamp).toDate(),
+                    priority: doc['priority'],
+                  );
+                }).toList();
+
                 return ListView.builder(
                   itemCount: tasks.length,
                   itemBuilder: (BuildContext context, int index) {
                     return TaskTileWidget(
                       oneTask: tasks[
-                      index], // Передаем каждую задачу в TaskTileWidget
+                          index], // Передаем каждую задачу в TaskTileWidget
                     );
                   },
                 );
               },
             ),
-          )
+          ),
         ],
       ),
       floatingActionButton: CustomFloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, '/new_task_screen');
         },
-        color: Colors.yellow, // Задайте нужный цвет
+        color: Colors.deepOrangeAccent, // Задайте нужный цвет
         icon: Icons.add, // Задайте нужный иконку
       ),
     );

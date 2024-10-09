@@ -7,7 +7,7 @@ Icon getPriorityIcon(String priority) {
           color: Colors.red); // Иконка для высокого приоритета
     case 'Medium':
       return const Icon(Icons.info,
-          color: Colors.orange); // Иконка для среднего приоритета
+          color: Colors.yellow); // Иконка для среднего приоритета
     case 'Low':
       return const Icon(Icons.flag_circle,
           color: Colors.green); // Иконка для низкого приоритета
