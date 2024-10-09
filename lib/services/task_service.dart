@@ -73,3 +73,16 @@ Future<void> deleteTask(String taskId) async {
     print("Error deleting task: $e");
   }
 }
+
+Future<void> setCompleted(String taskId, bool currentStatus) async {
+  try {
+    print("Updating task ID: $taskId from status: $currentStatus"); // Отладочное сообщение
+    await FirebaseFirestore.instance
+        .collection('toDoTasks')
+        .doc(taskId)
+        .update({'isCompleted': !currentStatus}); // Переключение статуса
+    print("Task status updated successfully.");
+  } catch (e) {
+    print("Error updating task status: $e");
+  }
+}

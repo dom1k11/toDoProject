@@ -67,12 +67,18 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
                 decoration: BoxDecoration(
                   border: Border(
                       // top: BorderSide(width: 2.0, color: Colors.grey.shade800),
-                       bottom: BorderSide(width: 2.0, color: Colors.grey.shade800)),
+                      bottom:
+                          BorderSide(width: 2.0, color: Colors.grey.shade800)),
                   color: Color.fromARGB(255, 53, 53, 53),
                 ),
                 padding: const EdgeInsets.only(top: 8, bottom: 8),
                 child: ListTile(
-                  leading: const Icon(Icons.check_box_outline_blank_outlined),
+                  leading: IconButton(
+                      onPressed: () {
+                        setCompleted(
+                            widget.oneTask.id, widget.oneTask.isCompleted);
+                      },
+                      icon: Icon(Icons.check_box_outline_blank)),
                   title: Row(
                     children: [
                       Text(
