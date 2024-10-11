@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:to_do_app_practice_2/models/task.dart';
 import 'package:to_do_app_practice_2/widgets/search_block.dart';
 import 'package:to_do_app_practice_2/widgets/task_tile.dart';
-import 'package:page_transition/page_transition.dart';
 
 import '../buttons/custom_floating_action_button.dart';
 

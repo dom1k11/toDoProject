@@ -4,12 +4,13 @@ import 'package:to_do_app_practice_2/models/task.dart';
 import 'package:to_do_app_practice_2/services/task_service.dart';
 import 'package:intl/intl.dart';
 import 'package:to_do_app_practice_2/widgets/snack_bar.dart';
-import '../utils/task_helpers.dart';
+import '../utils/task_prirority.dart';
 
 class TaskTileWidget extends StatefulWidget {
   final Task oneTask;
 
-  TaskTileWidget({required this.oneTask, Key? key}) : super(key: Key(oneTask.id));
+  TaskTileWidget({required this.oneTask, Key? key})
+      : super(key: Key(oneTask.id));
 
   @override
   State<TaskTileWidget> createState() => _TaskTileWidgetState();
@@ -71,7 +72,8 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
                 await setCompleted(widget.oneTask.id, currentStatus);
 
                 setState(() {
-                  widget.oneTask.isCompleted = !currentStatus; // Меняем статус задачи
+                  widget.oneTask.isCompleted =
+                      !currentStatus; // Меняем статус задачи
                 });
               },
               icon: Icon(
@@ -88,7 +90,8 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
                     style: TextStyle(
                       color: Colors.orange,
                       decoration: widget.oneTask.isCompleted
-                          ? TextDecoration.lineThrough // Зачеркнуть выполненную задачу
+                          ? TextDecoration
+                              .lineThrough // Зачеркнуть выполненную задачу
                           : TextDecoration.none,
                     ),
                   ),
@@ -105,13 +108,23 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
                   style: const TextStyle(color: Colors.orangeAccent),
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  DateFormat('MMM d, yyyy').format(widget.oneTask.dateTime), // Дата задачи
-                  style: const TextStyle(color: Colors.orangeAccent),
+                Row(
+                  children: [
+                    Text(
+                      DateFormat('MMM d, yyyy').format(widget.oneTask.dateTime),
+                      // Дата задачи
+                      style: const TextStyle(color: Colors.orangeAccent),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      "Days Left: ",
+                      style: const TextStyle(color: Colors.orangeAccent),
+                    ),
+                  ],
                 ),
               ],
             ),
-            trailing: const Icon(Icons.arrow_forward_ios), // Изменил иконку на более привычную
+            trailing: const Icon(Icons.arrow_back_ios_new_sharp),
           ),
         ),
       ),

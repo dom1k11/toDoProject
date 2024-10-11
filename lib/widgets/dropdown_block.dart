@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-import 'package:to_do_app_practice_2/utils/task_helpers.dart'; // Импортируйте ваш файл
+import 'package:to_do_app_practice_2/utils/task_prirority.dart'; // Импортируйте ваш файл
 
 class DropdownMenuBlock extends StatefulWidget {
   const DropdownMenuBlock({super.key, required this.onPrioritySelected});
@@ -23,22 +23,22 @@ class _DropdownMenuBlockState extends State<DropdownMenuBlock> {
       decoration: BoxDecoration(
         borderRadius: isDropdownOpened
             ? const BorderRadius.only(
-          topLeft: Radius.circular(8),
-          topRight: Radius.circular(8),
-        )
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
+              )
             : BorderRadius.circular(8),
         color: const Color.fromARGB(255, 70, 70, 70),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton2<String>(
-          dropdownStyleData: DropdownStyleData(
-            elevation: 0,
+          dropdownStyleData: const DropdownStyleData(
             decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
+              borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(8),
                 bottomRight: Radius.circular(8),
               ),
-              color: const Color.fromARGB(255, 70, 70, 70),
+              color: Color.fromARGB(255, 70, 70, 70),
+
             ),
           ),
           isExpanded: true,
@@ -49,7 +49,8 @@ class _DropdownMenuBlockState extends State<DropdownMenuBlock> {
               Text("Select Priority", style: TextStyle(color: Colors.white)),
             ],
           ),
-          value: dropdownValue, // Установите текущее значение
+          value: dropdownValue,
+          // Установите текущее значение
           items: dropdownList.map((priority) {
             return DropdownMenuItem<String>(
               value: priority.name,
@@ -64,7 +65,8 @@ class _DropdownMenuBlockState extends State<DropdownMenuBlock> {
           }).toList(),
           onChanged: (value) {
             setState(() {
-              dropdownValue = value ?? 'Default'; // Если значение null, устанавливаем 'Default'
+              dropdownValue = value ??
+                  'Default'; // Если значение null, устанавливаем 'Default'
             });
             if (value != null) {
               widget.onPrioritySelected(value);

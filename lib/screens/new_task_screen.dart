@@ -113,17 +113,17 @@ class _NewTaskPageState extends State<NewTaskPage> {
       ),
       child: TextField(
         controller: newTaskDescriptionController,
-        decoration: const InputDecoration(
-            prefixIcon: Icon(
+        decoration: InputDecoration(
+            prefixIcon: const Icon(
               Icons.description_outlined,
               color: Colors.orange,
             ),
             border: InputBorder.none,
-            label: Text(
+            label: const Text(
               "Description",
               style: TextStyle(color: Colors.orange),
             ),
-            hintStyle: TextStyle(color: Colors.orange),
+            hintStyle: TextStyle(color: Colors.grey.shade500),
             hintText: "(Optional)"),
       ),
     );
