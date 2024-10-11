@@ -14,6 +14,7 @@ Future<void> addTask(BuildContext context, Function resetPriority) async {
       String taskDescription = newTaskDescriptionController.text.isNotEmpty
           ? newTaskDescriptionController.text
           : "No Description"; // Если пусто, используем "No Description"
+
       await FirebaseFirestore.instance.collection('toDoTasks').add({
         'task_name': newTaskNameController.text,
         'task_description': taskDescription,
@@ -44,23 +45,19 @@ Future<void> addTask(BuildContext context, Function resetPriority) async {
   }
 }
 
+
 Future<List<Task>> getTasks() async {
   List<Task> taskList = [];
   try {
     QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('toDoTasks').get();
+    await FirebaseFirestore.instance.collection('toDoTasks').get();
     for (var doc in querySnapshot.docs) {
       taskList.add(Task(
-        taskName: doc['task_name'],
-        // Используй данные из Firestore
-        taskDescription: doc['task_description'],
-        // Используй данные из Firestore
-        dateTime: (doc['DateTime'] as Timestamp).toDate(),
-        // Преобразование Timestamp в DateTime
-        // Преобразование строки даты в объект DateTime
-        // Преобразуй временную метку
-        priority: doc['priority'],
         id: doc.id,
+        taskName: doc['task_name'],
+        taskDescription: doc['task_description'],
+        dateTime: (doc['DateTime'] as Timestamp).toDate(), // Преобразуем Timestamp в DateTime
+        priority: doc['priority'],
       ));
     }
   } catch (e) {
@@ -68,6 +65,7 @@ Future<List<Task>> getTasks() async {
   }
   return taskList;
 }
+
 
 Future<void> deleteTask(String taskId) async {
   try {

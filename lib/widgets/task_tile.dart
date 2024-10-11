@@ -97,7 +97,7 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
                   ),
                 ),
                 const SizedBox(width: 5),
-                getPriorityIcon(widget.oneTask.priority), // Иконка приоритета
+                // Иконка приоритета
               ],
             ),
             subtitle: Column(
@@ -116,15 +116,27 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
                       style: const TextStyle(color: Colors.orangeAccent),
                     ),
                     SizedBox(width: 10),
+                    // Используем метод daysLeft для отображения оставшихся дней
                     Text(
-                      "Days Left: ",
+                      "Days Left: ${widget.oneTask.daysLeft}",
                       style: const TextStyle(color: Colors.orangeAccent),
                     ),
+                    SizedBox(width: 10),
                   ],
                 ),
               ],
             ),
-            trailing: const Icon(Icons.arrow_back_ios_new_sharp),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              // Минимальный размер для трейлинга
+              children: [
+                getPriorityIcon(widget.oneTask.priority),
+
+                const SizedBox(width:20),
+                const Icon(Icons.arrow_back_ios_new_sharp, color: Colors.orange),
+
+              ],
+            ),
           ),
         ),
       ),
