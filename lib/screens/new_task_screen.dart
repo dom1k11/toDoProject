@@ -26,6 +26,11 @@ class _NewTaskPageState extends State<NewTaskPage> {
     newTaskDateTimeController.text = DateFormat.yMd().format(DateTime.now());
   }
 
+  void resetPriority() {
+    setState(() {
+      selectedPriority = 'Default'; // Сброс значения приоритета на значение по умолчанию
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,10 +52,12 @@ class _NewTaskPageState extends State<NewTaskPage> {
           ),
         ],
       ),
-      floatingActionButton:  CustomFloatingActionButton(
-        onPressed: () => addTask(context),
+      floatingActionButton: CustomFloatingActionButton(
+        onPressed: () {
+          addTask(context, resetPriority); // Передаем контекст и функцию сброса
+        },
         color: Colors.greenAccent, // Задайте нужный цвет
-        icon: Icons.add, // Задайте нужный иконку
+        icon: Icons.add, // Задайте нужную иконку
       ),
     );
   }
@@ -63,6 +70,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
         color: const Color.fromARGB(255, 70, 70, 70),
       ),
       child: TextField(
+        enableInteractiveSelection: false,
         controller: newTaskDateTimeController,
         onTap: () {
           DatePicker.showDatePicker(context,
@@ -73,6 +81,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
           }, onConfirm: (date) {
             setState(() {
               newTaskDateTimeController.text = DateFormat.yMd().format(date);
+
             });
 
             print('confirm $date');

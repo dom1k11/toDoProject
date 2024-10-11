@@ -5,7 +5,10 @@ import '../widgets/snack_bar.dart';
 import '../models/task.dart';
 import '../screens/new_task_screen.dart';
 
-Future<void> addTask(BuildContext context) async {
+
+
+
+Future<void> addTask(BuildContext context, Function resetPriority) async {
   try {
     if (newTaskNameController.text.isNotEmpty) {
       String taskDescription = newTaskDescriptionController.text.isNotEmpty
@@ -21,11 +24,15 @@ Future<void> addTask(BuildContext context) async {
         ),
       });
 
-      print("Task sucessfully added");
+      print("Task successfully added");
 
+      // Очищаем поля ввода
       newTaskNameController.clear();
       newTaskDescriptionController.clear();
       newTaskDateTimeController.clear();
+      // Сбрасываем выбранный приоритет
+      resetPriority(); // Вызов функции сброса
+
       Navigator.pop(context);
       newTaskSnackBar(context, "New Task Added", Colors.greenAccent);
     } else {
@@ -82,6 +89,8 @@ Future<void> setCompleted(String taskId, bool currentStatus) async {
         .doc(taskId)
         .update({'isCompleted': !currentStatus}); // Переключение статуса
     print("Task status updated successfully.");
+    print("Task id $taskId");
+    print("Task status $currentStatus");
   } catch (e) {
     print("Error updating task status: $e");
   }
