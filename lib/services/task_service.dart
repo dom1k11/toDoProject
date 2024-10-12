@@ -21,7 +21,7 @@ Future<void> addTask(BuildContext context, Function resetPriority) async {
         'isCompleted': false,
         'priority': selectedPriority,
         'DateTime': Timestamp.fromDate(
-          DateFormat.yMd().parse(newTaskDateTimeController.text),
+          DateFormat('MMM d, yyyy').parse(newTaskDateTimeController.text),
         ),
       });
 

@@ -23,7 +23,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
   void initState() {
     super.initState();
     // Устанавливаем текущую дату в контроллер в нужном формате
-    newTaskDateTimeController.text = DateFormat.yMd().format(DateTime.now());
+    newTaskDateTimeController.text =  DateFormat('MMM d, yyyy').format(DateTime.now());
   }
 
   void resetPriority() {
@@ -80,7 +80,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
             print('change $date');
           }, onConfirm: (date) {
             setState(() {
-              newTaskDateTimeController.text = DateFormat.yMd().format(date);
+              newTaskDateTimeController.text = DateFormat('MMM d, yyyy').format(date);
 
             });
 
