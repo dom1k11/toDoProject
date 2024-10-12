@@ -11,6 +11,7 @@ class NewTaskPage extends StatefulWidget {
 
   @override
   State<NewTaskPage> createState() => _NewTaskPageState();
+
 }
 
 String selectedPriority = 'Low'; // Значение по умолчанию
@@ -20,6 +21,7 @@ TextEditingController newTaskDescriptionController = TextEditingController();
 TextEditingController newTaskDateTimeController = TextEditingController();
 
 class _NewTaskPageState extends State<NewTaskPage> {
+
   void initState() {
     super.initState();
     // Устанавливаем текущую дату в контроллер в нужном формате
@@ -33,6 +35,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
   }
   @override
   Widget build(BuildContext context) {
+    bool showFab = MediaQuery.of(context).viewInsets.bottom != 0;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add New Task'),
@@ -52,12 +55,15 @@ class _NewTaskPageState extends State<NewTaskPage> {
           ),
         ],
       ),
-      floatingActionButton: CustomFloatingActionButton(
-        onPressed: () {
-          addTask(context, resetPriority); // Передаем контекст и функцию сброса
-        },
-        color: Colors.greenAccent, // Задайте нужный цвет
-        icon: Icons.add, // Задайте нужную иконку
+      floatingActionButton: Visibility(
+      visible: !showFab,
+        child: CustomFloatingActionButton(
+          onPressed: () {
+            addTask(context, resetPriority); // Передаем контекст и функцию сброса
+          },
+          color: Colors.greenAccent, // Задайте нужный цвет
+          icon: Icons.add, // Задайте нужную иконку
+        ),
       ),
     );
   }
