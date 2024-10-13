@@ -81,7 +81,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
         onTap: () {
           DatePicker.showDatePicker(context,
               showTitleActions: true,
-              minTime: DateTime.now(),
+              minTime: DateTime(2023, 12, 31),
               maxTime: DateTime(2026, 12, 31), onChanged: (date) {
             print('change $date');
           }, onConfirm: (date) {

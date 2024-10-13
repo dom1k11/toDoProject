@@ -118,9 +118,14 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
                     SizedBox(width: 10),
                     // Используем метод daysLeft для отображения оставшихся дней
                     Text(
-                      "Days Left: ${widget.oneTask.daysLeft}",
-                      style: const TextStyle(color: Colors.orangeAccent),
+                      "${widget.oneTask.daysLeft}", // Отображаем строку с количеством дней
+                      style: TextStyle(
+                        color: widget.oneTask.daysLeftColor, // Применяем цвет текста
+                      ),
                     ),
+
+
+
                     SizedBox(width: 10),
                   ],
                 ),

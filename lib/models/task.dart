@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Task {
   String id;
   String taskName;
@@ -15,16 +17,35 @@ class Task {
     this.isCompleted = false,
   });
 
-  // Метод для вычисления оставшихся дней до выполнения задачи
-  int get daysLeft {
-    final DateTime now = DateTime.now();
-    // Устанавливаем время на 23:59:59 для учета полного дня
-    final DateTime endOfTaskDate = DateTime(dateTime.year, dateTime.month, dateTime.day, 23, 59, 59);
 
-    // Вычисляем разницу
+  String get daysLeft {
+    final DateTime now = DateTime.now();
+    final DateTime endOfTaskDate = DateTime(dateTime.year, dateTime.month, dateTime.day, 23, 59, 59);
     final Duration difference = endOfTaskDate.difference(now);
 
-    // Возвращаем оставшиеся дни, если они больше нуля
-    return difference.inDays >= 0 ? difference.inDays : 0;
+    if (difference.inDays > 0) {
+      return '${difference.inDays} days left';
+    } else if (difference.inDays == 0) {
+      return 'Last Day';
+    } else {
+      return '${difference.inDays.abs()} days ago';
+    }
+  }
+
+
+  Color get daysLeftColor {
+    final DateTime now = DateTime.now();
+    final DateTime endOfTaskDate = DateTime(dateTime.year, dateTime.month, dateTime.day, 23, 59, 59);
+    final Duration difference = endOfTaskDate.difference(now);
+
+    if (difference.inDays > 2) {
+      return Colors.green; // Более 2 дней — зеленый
+    } else if (difference.inDays == 2) {
+      return Colors.yellow; // 2 дня — желтый
+    } else if (difference.inDays == 1) {
+      return Colors.orange; // 1 день — оранжевый
+    } else {
+      return Colors.red; // Менее 1 дня — красный
+    }
   }
 }
