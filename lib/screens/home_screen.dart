@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_app_practice_2/models/task.dart';
+import 'package:to_do_app_practice_2/utils/task_prirority.dart';
 import 'package:to_do_app_practice_2/widgets/search_block.dart';
 import 'package:to_do_app_practice_2/widgets/task_tile.dart';
 
@@ -36,11 +37,8 @@ class _HomePageState extends State<HomePage> {
           ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('toDoTasks')
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
+              stream: FirebaseFirestore.instance.collection('toDoTasks').snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -72,17 +70,20 @@ class _HomePageState extends State<HomePage> {
                   );
                 }).toList();
 
+                // Сортируем список задач по приоритету
+                tasks.sort((a, b) => priorityValue(b.priority).compareTo(priorityValue(a.priority)));
+
                 return ListView.builder(
                   itemCount: tasks.length,
                   itemBuilder: (BuildContext context, int index) {
                     return TaskTileWidget(
-                      oneTask: tasks[
-                          index], // Передаем каждую задачу в TaskTileWidget
+                      oneTask: tasks[index], // Передаем каждую задачу в TaskTileWidget
                     );
                   },
                 );
               },
-            ),
+            )
+            ,
           ),
         ],
       ),

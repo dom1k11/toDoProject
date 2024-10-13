@@ -19,6 +19,8 @@ class TaskTileWidget extends StatefulWidget {
 class _TaskTileWidgetState extends State<TaskTileWidget> {
   bool _visible = true; // Управление видимостью для анимации удаления
 
+  // Метод для получения цвета приоритета
+
   @override
   Widget build(BuildContext context) {
     return AnimatedOpacity(
@@ -31,116 +33,126 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
         }
       },
       child: Container(
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(width: 2.0, color: Colors.grey.shade800),
+        color: const Color.fromARGB(255, 60, 60, 60),
+        padding: const EdgeInsets.all(8),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: getPriorityColor(widget.oneTask.priority),
           ),
-          color: const Color.fromARGB(255, 53, 53, 53),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Slidable(
-          endActionPane: ActionPane(
-            motion: const DrawerMotion(),
-            children: [
-              SlidableAction(
-                onPressed: (context) {
-                  newTaskSnackBar(context, "Task Deleted", Colors.redAccent);
+          padding: const EdgeInsets.symmetric(vertical: 0),
+          child: Slidable(
+            endActionPane: ActionPane(
+              motion: const DrawerMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (context) {
+                    newTaskSnackBar(context, "Task Deleted", Colors.redAccent);
+                    setState(() {
+                      _visible = false; // Скрываем задачу с анимацией
+                    });
+                  },
+                  backgroundColor: const Color(0xFFFE4A49),
+                  foregroundColor: Colors.white,
+                  icon: Icons.delete,
+                  label: 'Delete',
+                ),
+                SlidableAction(
+                  onPressed: (context) {
+                    Navigator.pushNamed(context, '/edit_task_screen');
+                  },
+                  backgroundColor: const Color(0xFF21B7CA),
+                  foregroundColor: Colors.white,
+                  icon: Icons.edit_note,
+                  label: 'Edit',
+                ),
+              ],
+            ),
+            child: ListTile(
+              leading: IconButton(
+                onPressed: () async {
+                  bool currentStatus = widget.oneTask.isCompleted;
+                  await setCompleted(widget.oneTask.id, currentStatus);
+
                   setState(() {
-                    _visible = false; // Скрываем задачу с анимацией
+                    widget.oneTask.isCompleted =
+                        !currentStatus; // Меняем статус задачи
                   });
                 },
-                backgroundColor: const Color(0xFFFE4A49),
-                foregroundColor: Colors.white,
-                icon: Icons.delete,
-                label: 'Delete',
-              ),
-              SlidableAction(
-                onPressed: (context) {
-                  Navigator.pushNamed(context, '/edit_task_screen');
-                },
-                backgroundColor: const Color(0xFF21B7CA),
-                foregroundColor: Colors.white,
-                icon: Icons.edit_note,
-                label: 'Edit',
-              ),
-            ],
-          ),
-          child: ListTile(
-            leading: IconButton(
-              onPressed: () async {
-                bool currentStatus = widget.oneTask.isCompleted;
-                await setCompleted(widget.oneTask.id, currentStatus);
-
-                setState(() {
-                  widget.oneTask.isCompleted =
-                      !currentStatus; // Меняем статус задачи
-                });
-              },
-              icon: Icon(
-                widget.oneTask.isCompleted
-                    ? Icons.check_box // Выполненная задача
-                    : Icons.check_box_outline_blank, // Невыполненная задача
-              ),
-            ),
-            title: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.oneTask.taskName,
-                    style: TextStyle(
-                      color: Colors.orange,
-                      decoration: widget.oneTask.isCompleted
-                          ? TextDecoration
-                              .lineThrough // Зачеркнуть выполненную задачу
-                          : TextDecoration.none,
-                    ),
-                  ),
+                icon: Icon(
+                  widget.oneTask.isCompleted
+                      ? Icons.check_box // Выполненная задача
+                      : Icons.check_box_outline_blank, // Невыполненная задача
                 ),
-                const SizedBox(width: 5),
-                // Иконка приоритета
-              ],
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.oneTask.taskDescription,
-                  style: const TextStyle(color: Colors.orangeAccent),
-                ),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Text(
-                      DateFormat('MMM d, yyyy').format(widget.oneTask.dateTime),
-                      // Дата задачи
-                      style: const TextStyle(color: Colors.orangeAccent),
-                    ),
-                    SizedBox(width: 10),
-                    // Используем метод daysLeft для отображения оставшихся дней
-                    Text(
-                      "${widget.oneTask.daysLeft}", // Отображаем строку с количеством дней
+              ),
+              title: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.oneTask.taskName,
                       style: TextStyle(
-                        color: widget.oneTask.daysLeftColor, // Применяем цвет текста
+                        color: Colors.black,
+                        decoration: widget.oneTask.isCompleted
+                            ? TextDecoration
+                                .lineThrough // Зачеркнуть выполненную задачу
+                            : TextDecoration.none,
                       ),
                     ),
-
-
-
-                    SizedBox(width: 10),
-                  ],
-                ),
-              ],
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              // Минимальный размер для трейлинга
-              children: [
-                getPriorityIcon(widget.oneTask.priority),
-
-                const SizedBox(width:20),
-                const Icon(Icons.arrow_back_ios_new_sharp, color: Colors.orange),
-
-              ],
+                  ),
+                  const SizedBox(width: 5),
+                  // Иконка приоритета
+                ],
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.oneTask.taskDescription,
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      Text(
+                        DateFormat('MMM d, yyyy')
+                            .format(widget.oneTask.dateTime),
+                        // Дата задачи
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                      const SizedBox(width: 10),
+                      // Используем метод daysLeft для отображения оставшихся дней
+                      Text(
+                        "${widget.oneTask.daysLeft}",
+                        // Отображаем строку с количеством дней
+                        style: TextStyle(
+                            color: widget.oneTask.daysLeftColor,
+                            shadows: const [
+                              Shadow(
+                                color: Colors.black,
+                                // Цвет тени
+                                offset: Offset(1.0, 1.0),
+                                // Смещение тени
+                                blurRadius: 1.0,
+                              ), // Радиус размытия тени)
+                            ],
+                            fontSize: 14 // Применяем цвет текста
+                            ),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                  ),
+                ],
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                // Минимальный размер для трейлинга
+                children: [
+                  getPriorityIcon(widget.oneTask.priority),
+                  const SizedBox(width: 20),
+                  const Icon(Icons.arrow_back_ios_new_sharp,
+                      color: Colors.orange),
+                ],
+              ),
             ),
           ),
         ),
