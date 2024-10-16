@@ -47,11 +47,11 @@ Icon getPriorityIcon(String priority) {
 Color getPriorityColor(String priority) {
   switch (priority) {
     case 'High':
-      return Color.fromARGB(255, 238, 126, 118); // Красный для высокого приоритета
+      return const Color.fromARGB(255, 238, 126, 118); // Красный для высокого приоритета
     case 'Medium':
-      return Color.fromARGB(200, 255, 233, 125); // Желтый для среднего приоритета
+      return const Color.fromARGB(200, 255, 233, 125); // Желтый для среднего приоритета
     case 'Low':
-      return Color.fromARGB(255, 127, 238, 175); // Зеленый для низкого приоритета
+      return const Color.fromARGB(255, 127, 238, 175); // Зеленый для низкого приоритета
     case 'Default':
       return Colors.grey; // Серый для приоритета по умолчанию
     default:

@@ -17,9 +17,8 @@ class TaskTileWidget extends StatefulWidget {
 }
 
 class _TaskTileWidgetState extends State<TaskTileWidget> {
-  bool _visible = true; // Управление видимостью для анимации удаления
-
-  // Метод для получения цвета приоритета
+  bool _visible = true;
+  bool _completed = true;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +27,8 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
       duration: const Duration(milliseconds: 500),
       onEnd: () {
         if (!_visible) {
-          // Удаляем задачу после анимации скрытия
-          deleteTask(widget.oneTask.id);
+          deleteTask(
+              widget.oneTask.id); // Удаляем задачу после анимации скрытия
         }
       },
       child: Container(
@@ -40,8 +39,9 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
             borderRadius: BorderRadius.circular(8),
             color: getPriorityColor(widget.oneTask.priority),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 0),
           child: Slidable(
+            enabled: !widget.oneTask.isCompleted,
+            // Отключаем Slidable для выполненных задач
             endActionPane: ActionPane(
               motion: const DrawerMotion(),
               children: [
@@ -72,91 +72,97 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
               leading: IconButton(
                 onPressed: () async {
                   bool currentStatus = widget.oneTask.isCompleted;
-                  await setCompleted(widget.oneTask.id, currentStatus);
 
                   setState(() {
-                    widget.oneTask.isCompleted =
-                        !currentStatus; // Меняем статус задачи
+                    widget.oneTask.isCompleted = !currentStatus;
                   });
+
+                  await Future.delayed(const Duration(milliseconds: 400));
+
+                  await setCompleted(widget.oneTask.id, currentStatus);
                 },
-                icon: Icon(
-                  widget.oneTask.isCompleted
-                      ? Icons.check_box // Выполненная задача
-                      : Icons.check_box_outline_blank, // Невыполненная задача
+                icon: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    return ScaleTransition(scale: animation, child: child);
+                  },
+                  child: Icon(
+                    widget.oneTask.isCompleted
+                        ? Icons.check_box // Выполненная задача
+                        : Icons.check_box_outline_blank, // Невыполненная задача
+                    key: ValueKey<bool>(
+                        widget.oneTask.isCompleted), // Добавляем ключ
+                  ),
                 ),
               ),
-              title: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      widget.oneTask.taskName,
-                      style: TextStyle(
-                        color: Colors.black,
-                        decoration: widget.oneTask.isCompleted
-                            ? TextDecoration
-                                .lineThrough // Зачеркнуть выполненную задачу
-                            : TextDecoration.none,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  // Иконка приоритета
-                ],
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.oneTask.taskDescription,
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    children: [
-                      Text(
-                        DateFormat('MMM d, yyyy')
-                            .format(widget.oneTask.dateTime),
-                        // Дата задачи
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                      const SizedBox(width: 10),
-                      // Используем метод daysLeft для отображения оставшихся дней
-                      Text(
-                        "${widget.oneTask.daysLeft}",
-                        // Отображаем строку с количеством дней
-                        style: TextStyle(
-                            color: widget.oneTask.daysLeftColor,
-                            shadows: const [
-                              Shadow(
-                                color: Colors.black,
-                                // Цвет тени
-                                offset: Offset(1.0, 1.0),
-                                // Смещение тени
-                                blurRadius: 1.0,
-                              ), // Радиус размытия тени)
-                            ],
-                            fontSize: 14 // Применяем цвет текста
-                            ),
-                      ),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                ],
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                // Минимальный размер для трейлинга
-                children: [
-                  getPriorityIcon(widget.oneTask.priority),
-                  const SizedBox(width: 20),
-                  const Icon(Icons.arrow_back_ios_new_sharp,
-                      color: Colors.orange),
-                ],
-              ),
+              title: _buildTaskText(widget.oneTask.taskName),
+              subtitle: _buildSubtitle(),
+              trailing: _buildTrailing(),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildTaskText(String text) {
+    return Text(
+      text,
+      style: TextStyle(
+        color: Colors.black,
+        decoration: widget.oneTask.isCompleted
+            ? TextDecoration.lineThrough // Зачеркнутая выполненная задача
+            : TextDecoration.none,
+      ),
+    );
+  }
+
+  Widget _buildSubtitle() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildTaskText(widget.oneTask.taskDescription),
+        const SizedBox(height: 5),
+        Row(
+          children: [
+            _buildTaskText(
+                DateFormat('MMM d, yyyy').format(widget.oneTask.dateTime)),
+            const SizedBox(width: 10),
+            Text(
+              widget.oneTask.isCompleted ? "" : widget.oneTask.daysLeft,
+              style: TextStyle(
+                color: widget.oneTask.daysLeftColor,
+                shadows: const [
+                  Shadow(
+                    color: Colors.black,
+                    offset: Offset(1.0, 1.0),
+                    blurRadius: 1.0,
+                  ),
+                ],
+                fontSize: 14,
+                decoration: widget.oneTask.isCompleted
+                    ? TextDecoration
+                        .lineThrough // Зачеркнуть выполненную задачу
+                    : TextDecoration.none,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTrailing() {
+    return widget.oneTask.isCompleted
+        ? const Text("")
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              getPriorityIcon(widget.oneTask.priority),
+              const SizedBox(width: 20),
+              const Icon(Icons.arrow_back_ios_new_sharp, color: Colors.black),
+            ],
+          );
   }
 }

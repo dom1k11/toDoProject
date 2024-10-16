@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_app_practice_2/screens/done_task_screen.dart';
 import 'package:to_do_app_practice_2/screens/edit_task_screen.dart';
 import 'package:to_do_app_practice_2/screens/new_task_screen.dart';
 import '../screens/home_screen.dart';
@@ -54,14 +55,15 @@ class MyApp extends StatelessWidget {
         // '/': (context) => const HomePage(),
         // '/new_task_screen': (context) => const NewTaskPage(),
         '/edit_task_screen': (context) => const EditTaskPage(),
+        '/done_task_screen': (context) => const DoneTaskScreen(),
       },
       onGenerateRoute: (settings) {
         switch (settings.name) {
           case '/new_task_screen':
             return PageTransition(
-              child: NewTaskPage(),
+              child: const NewTaskPage(),
               type: PageTransitionType.rightToLeft,
-              duration: Duration(milliseconds: 300), // Установи нужную продолжительность анимации
+              duration: const Duration(milliseconds: 300), // Установи нужную продолжительность анимации
                curve: Curves.easeOutSine, // Установи нужную кривую анимации
             );
           default:

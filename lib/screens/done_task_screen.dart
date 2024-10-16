@@ -2,38 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_app_practice_2/models/task.dart';
 import 'package:to_do_app_practice_2/utils/task_prirority.dart';
-import 'package:to_do_app_practice_2/widgets/drawer.dart';
-import 'package:to_do_app_practice_2/widgets/search_block.dart';
 import 'package:to_do_app_practice_2/widgets/task_tile.dart';
 
-import '../buttons/custom_floating_action_button.dart';
+class DoneTaskScreen extends StatelessWidget {
+  const DoneTaskScreen({super.key});
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const DrawerWidget(),
       appBar: AppBar(
-        title: const Text('Tasks'),
+        title: const Text('Done Tasks'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: const Color.fromARGB(255, 70, 70, 70),
-            ),
-            child: const SearchBlockWidget(), //Виджет Поиска
-          ),
           Divider(
             color: Colors.grey.shade800,
           ),
@@ -60,10 +42,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ); // Сообщение, если данных нет
                 }
-
                 // Получаем список документов из snapshot
                 List<DocumentSnapshot> docs = snapshot.data!.docs;
-
                 // Преобразуем документы в список задач
                 List<Task> tasks = docs.map((doc) {
                   return Task(
@@ -74,9 +54,7 @@ class _HomePageState extends State<HomePage> {
                     priority: doc['priority'],
                     isCompleted: doc['isCompleted'], // Используем правильное название поля
                   );
-                }).where((task) => !task.isCompleted).toList(); // Фильтрация невыполненных задач
-// Фильтрация невыполненных задач
-
+                }).where((task) => task.isCompleted).toList(); // Фильтрация невыполненных задач
                 // Сортируем список задач по приоритету
                 tasks.sort((a, b) => priorityValue(b.priority)
                     .compareTo(priorityValue(a.priority)));
@@ -86,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (BuildContext context, int index) {
                     return TaskTileWidget(
                       oneTask: tasks[
-                          index], // Передаем каждую задачу в TaskTileWidget
+                      index], // Передаем каждую задачу в TaskTileWidget
                     );
                   },
                 );
@@ -95,13 +73,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      floatingActionButton: CustomFloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/new_task_screen');
-        },
-        color: Colors.deepOrangeAccent, // Задайте нужный цвет
-        icon: Icons.add, // Задайте нужный иконку
-      ),
+
     );
   }
 }
