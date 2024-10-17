@@ -38,6 +38,8 @@ dependencies:
   flutter_datetime_picker_plus: ^2.2.0
   page_transition: ^2.1.0
   dropdown_button2: ^2.3.9
+  animated_text_kit: ^4.2.2
+
 
 dev_dependencies:
   flutter_test:

@@ -25,7 +25,8 @@ class _NewTaskPageState extends State<NewTaskPage> {
   void initState() {
     super.initState();
     // Устанавливаем текущую дату в контроллер в нужном формате
-    newTaskDateTimeController.text =  DateFormat('MMM d, yyyy').format(DateTime.now());
+    newTaskDateTimeController.text = DateFormat('MMM d, yyyy').format(DateTime.now().add(Duration(days: 7)));
+
   }
 
   void resetPriority() {
@@ -81,7 +82,7 @@ class _NewTaskPageState extends State<NewTaskPage> {
         onTap: () {
           DatePicker.showDatePicker(context,
               showTitleActions: true,
-              minTime: DateTime(2023, 12, 31),
+              minTime: DateTime.now(),
               maxTime: DateTime(2026, 12, 31), onChanged: (date) {
             print('change $date');
           }, onConfirm: (date) {

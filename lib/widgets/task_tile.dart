@@ -8,8 +8,8 @@ import '../utils/task_prirority.dart';
 
 class TaskTileWidget extends StatefulWidget {
   final Task oneTask;
-  final bool showTrailing; // Новый параметр для управления трейлинго
-  TaskTileWidget({required this.oneTask, Key? key, required this.showTrailing})
+  final bool showTrailing;
+  TaskTileWidget({required this.oneTask, Key? key, required this.showTrailing,})
       : super(key: Key(oneTask.id));
 
   @override
@@ -31,85 +31,90 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
               widget.oneTask.id); // Удаляем задачу после анимации скрытия
         }
       },
-      child: Container(
-        color: const Color.fromARGB(255, 60, 60, 60),
-        padding: const EdgeInsets.all(8),
+      child: AnimatedOpacity(
+        opacity: _trailingVisible ? 1.0 : 0.0,
+        duration: const Duration(milliseconds: 900),
         child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: getPriorityColor(widget.oneTask.priority),
-          ),
-          child: Slidable(
-            enabled: !widget.oneTask.isCompleted,
-            // Отключаем Slidable для выполненных задач
-            endActionPane: ActionPane(
-              motion: const DrawerMotion(),
-              children: [
-                SlidableAction(
-                  onPressed: (context) {
-                    newTaskSnackBar(context, "Task Deleted", Colors.redAccent);
-                    setState(() {
-                      _visible = false; // Скрываем задачу с анимацией
-                    });
-                  },
-                  backgroundColor: const Color(0xFFFE4A49),
-                  foregroundColor: Colors.white,
-                  icon: Icons.delete,
-                  label: 'Delete',
-                ),
-                SlidableAction(
-                  onPressed: (context) {
-                    Navigator.pushNamed(context, '/edit_task_screen');
-                  },
-                  backgroundColor: const Color(0xFF21B7CA),
-                  foregroundColor: Colors.white,
-                  icon: Icons.edit_note,
-                  label: 'Edit',
-                ),
-              ],
+          color: const Color.fromARGB(255, 60, 60, 60),
+          padding: const EdgeInsets.all(8),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: getPriorityColor(widget.oneTask.priority),
             ),
-            child: ListTile(
-              leading: IconButton(
-                onPressed: () async {
-                  bool currentStatus = widget.oneTask.isCompleted;
+            child: Slidable(
+              enabled: !widget.oneTask.isCompleted,
+              // Отключаем Slidable для выполненных задач
+              endActionPane: ActionPane(
+                motion: const DrawerMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (context) {
+                      newTaskSnackBar(context, "Task Deleted", Colors.redAccent);
+                      setState(() {
+                        _visible = false; // Скрываем задачу с анимацией
+                      });
+                    },
+                    backgroundColor: const Color(0xFFFE4A49),
+                    foregroundColor: Colors.white,
+                    icon: Icons.delete,
+                    label: 'Delete',
+                  ),
+                  SlidableAction(
+                    onPressed: (context) {
+                      Navigator.pushNamed(context, '/edit_task_screen');
+                    },
+                    backgroundColor: const Color(0xFF21B7CA),
+                    foregroundColor: Colors.white,
+                    icon: Icons.edit_note,
+                    label: 'Edit',
+                  ),
+                ],
+              ),
+              child: ListTile(
+                leading: IconButton(
+                  onPressed: widget.oneTask.isCompleted ? null : () async { // Делаем кнопку неактивной, если задача выполнена
+                    bool currentStatus = widget.oneTask.isCompleted;
 
-                  setState(() {
-                    widget.oneTask.isCompleted = !currentStatus;
-                  });
-
-                  if (widget.oneTask.isCompleted) {
-                     // Ждем перед скрытием трейлинга
                     setState(() {
-                      _trailingVisible = false; // Скрываем трейлинг
+                      widget.oneTask.isCompleted = !currentStatus;
                     });
-                  } else {
-                    setState(() {
-                      _trailingVisible = true; // Показываем трейлинг снова
-                    });
-                  }
 
-                  await Future.delayed(const Duration(milliseconds: 400));
+                    if (widget.oneTask.isCompleted) {
+                      // Ждем перед скрытием трейлинга
+                      setState(() {
+                        _trailingVisible = false; // Скрываем трейлинг
+                      });
+                    } else {
+                      setState(() {
+                        _trailingVisible = true; // Показываем трейлинг снова
+                      });
+                    }
 
-                  await setCompleted(widget.oneTask.id, currentStatus);
-                },
-                icon: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 250),
-                  transitionBuilder:
-                      (Widget child, Animation<double> animation) {
-                    return ScaleTransition(scale: animation, child: child);
+                    await Future.delayed(const Duration(milliseconds: 1000));
+
+                    await setCompleted(widget.oneTask.id, currentStatus);
                   },
-                  child: Icon(
-                    widget.oneTask.isCompleted
-                        ? Icons.check_box // Выполненная задача
-                        : Icons.check_box_outline_blank, // Невыполненная задача
-                    key: ValueKey<bool>(
-                        widget.oneTask.isCompleted), // Добавляем ключ
+                  icon: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    transitionBuilder:
+                        (Widget child, Animation<double> animation) {
+                      return ScaleTransition(scale: animation, child: child);
+                    },
+                    child: Icon(
+                      widget.oneTask.isCompleted
+                          ? Icons.check_box // Выполненная задача
+                          : Icons.check_box_outline_blank, // Невыполненная задача
+                      key: ValueKey<bool>(
+                          widget.oneTask.isCompleted), // Добавляем ключ
+                    ),
                   ),
                 ),
+
+                title: _buildTaskText(widget.oneTask.taskName),
+                subtitle: _buildSubtitle(),
+                trailing: _buildTrailing(),
               ),
-              title: _buildTaskText(widget.oneTask.taskName),
-              subtitle: _buildSubtitle(),
-              trailing: _buildTrailing(),
             ),
           ),
         ),
@@ -140,22 +145,23 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
             _buildTaskText(
                 DateFormat('MMM d, yyyy').format(widget.oneTask.dateTime)),
             const SizedBox(width: 10),
-            Text(
-              widget.oneTask.isCompleted ? "" : widget.oneTask.daysLeft,
-              style: TextStyle(
-                color: widget.oneTask.daysLeftColor,
-                shadows: const [
-                  Shadow(
-                    color: Colors.black,
-                    offset: Offset(1.0, 1.0),
-                    blurRadius: 1.0,
-                  ),
-                ],
-                fontSize: 14,
-                decoration: widget.oneTask.isCompleted
-                    ? TextDecoration
-                        .lineThrough // Зачеркнуть выполненную задачу
-                    : TextDecoration.none,
+            AnimatedOpacity(
+              opacity: widget.oneTask.isCompleted ? 0.0 : 1.0, // Устанавливаем непрозрачность в 0.0, если задача выполнена
+              duration: const Duration(milliseconds: 400),
+              child: Text(
+                widget.oneTask.daysLeft,
+                style: TextStyle(
+                  color: widget.oneTask.daysLeftColor,
+                  shadows: const [
+                    Shadow(
+                      color: Colors.black,
+                      offset: Offset(1.0, 1.0),
+                      blurRadius: 1.0,
+                    ),
+                  ],
+                  fontSize: 14,
+
+                ),
               ),
             ),
           ],
@@ -164,12 +170,14 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
     );
   }
 
+
+
   Widget _buildTrailing() {
     if (!widget.showTrailing) return const SizedBox.shrink(); // Если showTrailing false, скрываем трейлинг
 
     return AnimatedOpacity(
       opacity: _trailingVisible ? 1.0 : 0.0,
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 100),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
