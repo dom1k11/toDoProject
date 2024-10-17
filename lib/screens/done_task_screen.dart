@@ -63,8 +63,8 @@ class DoneTaskScreen extends StatelessWidget {
                   itemCount: tasks.length,
                   itemBuilder: (BuildContext context, int index) {
                     return TaskTileWidget(
-                      oneTask: tasks[
-                      index], // Передаем каждую задачу в TaskTileWidget
+                      oneTask: tasks[index], // Передаем каждую задачу в TaskTileWidget
+                      showTrailing: false, // Скрываем трейлинг для выполненных задач
                     );
                   },
                 );
@@ -73,7 +73,6 @@ class DoneTaskScreen extends StatelessWidget {
           ),
         ],
       ),
-
     );
   }
 }

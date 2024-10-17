@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (BuildContext context, int index) {
                     return TaskTileWidget(
                       oneTask: tasks[
-                          index], // Передаем каждую задачу в TaskTileWidget
+                          index], showTrailing: true, // Передаем каждую задачу в TaskTileWidget
                     );
                   },
                 );

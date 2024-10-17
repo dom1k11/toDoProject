@@ -8,8 +8,8 @@ import '../utils/task_prirority.dart';
 
 class TaskTileWidget extends StatefulWidget {
   final Task oneTask;
-
-  TaskTileWidget({required this.oneTask, Key? key})
+  final bool showTrailing; // Новый параметр для управления трейлинго
+  TaskTileWidget({required this.oneTask, Key? key, required this.showTrailing})
       : super(key: Key(oneTask.id));
 
   @override
@@ -18,7 +18,7 @@ class TaskTileWidget extends StatefulWidget {
 
 class _TaskTileWidgetState extends State<TaskTileWidget> {
   bool _visible = true;
-  bool _completed = true;
+  bool _trailingVisible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +76,17 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
                   setState(() {
                     widget.oneTask.isCompleted = !currentStatus;
                   });
+
+                  if (widget.oneTask.isCompleted) {
+                     // Ждем перед скрытием трейлинга
+                    setState(() {
+                      _trailingVisible = false; // Скрываем трейлинг
+                    });
+                  } else {
+                    setState(() {
+                      _trailingVisible = true; // Показываем трейлинг снова
+                    });
+                  }
 
                   await Future.delayed(const Duration(milliseconds: 400));
 
@@ -154,15 +165,20 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
   }
 
   Widget _buildTrailing() {
-    return widget.oneTask.isCompleted
-        ? const Text("")
-        : Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              getPriorityIcon(widget.oneTask.priority),
-              const SizedBox(width: 20),
-              const Icon(Icons.arrow_back_ios_new_sharp, color: Colors.black),
-            ],
-          );
+    if (!widget.showTrailing) return const SizedBox.shrink(); // Если showTrailing false, скрываем трейлинг
+
+    return AnimatedOpacity(
+      opacity: _trailingVisible ? 1.0 : 0.0,
+      duration: const Duration(milliseconds: 400),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          getPriorityIcon(widget.oneTask.priority),
+          const SizedBox(width: 20),
+          const Icon(Icons.arrow_back_ios_new_sharp, color: Colors.black),
+        ],
+      ),
+    );
   }
+
 }
