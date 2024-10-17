@@ -100,7 +100,8 @@ class _HomePageState extends State<HomePage> {
           Navigator.pushNamed(context, '/new_task_screen');
         },
         color: Colors.deepOrangeAccent, // Задайте нужный цвет
-        icon: Icons.add, // Задайте нужный иконку
+        icon: Icons.edit_calendar,
+        labelText: "New Task?",
       ),
     );
   }

@@ -78,6 +78,7 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
 
                     setState(() {
                       widget.oneTask.isCompleted = !currentStatus;
+                      newTaskSnackBar(context, "Task Completed", Colors.blueAccent);
                     });
 
                     if (widget.oneTask.isCompleted) {

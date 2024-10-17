@@ -11,7 +11,6 @@ class NewTaskPage extends StatefulWidget {
 
   @override
   State<NewTaskPage> createState() => _NewTaskPageState();
-
 }
 
 String selectedPriority = 'Low'; // Значение по умолчанию
@@ -21,19 +20,20 @@ TextEditingController newTaskDescriptionController = TextEditingController();
 TextEditingController newTaskDateTimeController = TextEditingController();
 
 class _NewTaskPageState extends State<NewTaskPage> {
-
   void initState() {
     super.initState();
     // Устанавливаем текущую дату в контроллер в нужном формате
-    newTaskDateTimeController.text = DateFormat('MMM d, yyyy').format(DateTime.now().add(Duration(days: 7)));
-
+    newTaskDateTimeController.text =
+        DateFormat('MMM d, yyyy').format(DateTime.now().add(Duration(days: 7)));
   }
 
   void resetPriority() {
     setState(() {
-      selectedPriority = 'Default'; // Сброс значения приоритета на значение по умолчанию
+      selectedPriority =
+          'Default'; // Сброс значения приоритета на значение по умолчанию
     });
   }
+
   @override
   Widget build(BuildContext context) {
     bool showFab = MediaQuery.of(context).viewInsets.bottom != 0;
@@ -57,13 +57,14 @@ class _NewTaskPageState extends State<NewTaskPage> {
         ],
       ),
       floatingActionButton: Visibility(
-      visible: !showFab,
+        visible: !showFab,
         child: CustomFloatingActionButton(
           onPressed: () {
-            addTask(context, resetPriority); // Передаем контекст и функцию сброса
+            addTask(
+                context, resetPriority); // Передаем контекст и функцию сброса
           },
           color: Colors.greenAccent, // Задайте нужный цвет
-          icon: Icons.add, // Задайте нужную иконку
+          icon: Icons.edit, labelText: "Add New Task", // Задайте нужную иконку
         ),
       ),
     );
@@ -87,8 +88,8 @@ class _NewTaskPageState extends State<NewTaskPage> {
             print('change $date');
           }, onConfirm: (date) {
             setState(() {
-              newTaskDateTimeController.text = DateFormat('MMM d, yyyy').format(date);
-
+              newTaskDateTimeController.text =
+                  DateFormat('MMM d, yyyy').format(date);
             });
 
             print('confirm $date');

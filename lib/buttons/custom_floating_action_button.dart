@@ -5,18 +5,19 @@ class CustomFloatingActionButton extends StatelessWidget {
       {super.key,
       required this.onPressed,
       required this.color,
-      required this.icon});
+      required this.icon, required this.labelText});
 
   final VoidCallback onPressed;
   final Color color;
   final IconData icon;
-
+  final String labelText;
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
+    return FloatingActionButton.extended(
       onPressed: onPressed,
       backgroundColor: color,
-      child: Icon(icon),
+      icon: Icon(icon), // Иконка
+      label: Text(labelText), // Текст
     );
   }
 }
