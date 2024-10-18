@@ -120,19 +120,23 @@ class _NewTaskPageState extends State<NewTaskPage> {
         color: const Color.fromARGB(255, 70, 70, 70),
       ),
       child: TextField(
+        maxLines: 5,
         controller: newTaskDescriptionController,
         decoration: InputDecoration(
-            prefixIcon: const Icon(
-              Icons.description_outlined,
-              color: Colors.orange,
-            ),
-            border: InputBorder.none,
-            label: const Text(
-              "Description",
-              style: TextStyle(color: Colors.orange),
-            ),
-            hintStyle: TextStyle(color: Colors.grey.shade500),
-            hintText: "(Optional)"),
+          prefixIcon: const Icon(
+            Icons.description_outlined,
+            color: Colors.orange,
+          ),
+          border: InputBorder.none,
+          label: const Text(
+            "Description",
+            style: TextStyle(color: Colors.orange),
+          ),
+          alignLabelWithHint: true,
+          // Выравнивает метку и иконку по верхнему краю
+          hintStyle: TextStyle(color: Colors.grey.shade500),
+          hintText: "(Optional)",
+        ),
       ),
     );
   }

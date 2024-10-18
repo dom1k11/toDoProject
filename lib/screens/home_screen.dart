@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(8),
               color: const Color.fromARGB(255, 70, 70, 70),
             ),
-            child: const SearchBlockWidget(), //Виджет Поиска
+            child: SearchBlockWidget(), //Виджет Поиска
           ),
           Divider(
             color: Colors.grey.shade800,

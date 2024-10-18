@@ -15,8 +15,9 @@ void newTaskSnackBar(BuildContext context, String message, Color color) {
       message,
       style: const TextStyle(color: Colors.black),
     ),
-    duration: const Duration(seconds: 2),
+    duration: const Duration(milliseconds: 2000),
     backgroundColor: color,
+
   );
   ScaffoldMessenger.of(context).showSnackBar(newTaskSnackBar);
 }

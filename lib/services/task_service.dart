@@ -48,6 +48,7 @@ Future<void> addTask(BuildContext context, Function resetPriority) async {
 
 Future<List<Task>> getTasks() async {
   List<Task> taskList = [];
+
   try {
     QuerySnapshot querySnapshot =
     await FirebaseFirestore.instance.collection('toDoTasks').get();

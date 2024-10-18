@@ -126,8 +126,24 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
   Widget _buildTaskText(String text) {
     return Text(
       text,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
         color: Colors.black,
+        decoration: widget.oneTask.isCompleted
+            ? TextDecoration.lineThrough
+            : TextDecoration.none,
+      ),
+    );
+  }
+
+  Widget _buildTaskDescription(String description) {
+    return Text(
+      description,
+      maxLines: 3,
+      overflow: TextOverflow.ellipsis,
+      style: TextStyle(
+        color: Colors.black54,
         decoration: widget.oneTask.isCompleted
             ? TextDecoration.lineThrough // Зачеркнутая выполненная задача
             : TextDecoration.none,
@@ -139,7 +155,7 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildTaskText(widget.oneTask.taskDescription),
+        _buildTaskDescription(widget.oneTask.taskDescription), // Описание задачи
         const SizedBox(height: 5),
         Row(
           children: [
@@ -147,7 +163,7 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
                 DateFormat('MMM d, yyyy').format(widget.oneTask.dateTime)),
             const SizedBox(width: 10),
             AnimatedOpacity(
-              opacity: widget.oneTask.isCompleted ? 0.0 : 1.0, // Устанавливаем непрозрачность в 0.0, если задача выполнена
+              opacity: widget.oneTask.isCompleted ? 0.0 : 1.0, // Скрываем, если задача выполнена
               duration: const Duration(milliseconds: 400),
               child: Text(
                 widget.oneTask.daysLeft,
@@ -161,7 +177,6 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
                     ),
                   ],
                   fontSize: 14,
-
                 ),
               ),
             ),
@@ -170,6 +185,7 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
       ],
     );
   }
+
 
 
 
