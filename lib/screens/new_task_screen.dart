@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:to_do_app_practice_2/buttons/custom_floating_action_button.dart';
+import 'package:to_do_app_practice_2/widgets/custom_date_text_field.dart';
+import 'package:to_do_app_practice_2/widgets/custom_text_field.dart';
 
 import 'package:to_do_app_practice_2/widgets/dropdown_block.dart';
 import 'package:to_do_app_practice_2/services/task_service.dart';
@@ -44,9 +46,10 @@ class _NewTaskPageState extends State<NewTaskPage> {
       ),
       body: Column(
         children: [
-          buildTaskNameContainer(),
-          buildTaskDescriptionContainer(),
-          buildDateContainer(),
+          _buildTaskNameTextField(),
+          _buildDescriptionTextField(),
+          _buildCustomDateTextField(context),
+          // buildDateContainer(),
           DropdownMenuBlock(
             onPrioritySelected: (priority) {
               setState(() {
@@ -67,6 +70,34 @@ class _NewTaskPageState extends State<NewTaskPage> {
           icon: Icons.edit, labelText: "Add New Task", // Задайте нужную иконку
         ),
       ),
+    );
+  }
+
+  CustomDateTextField _buildCustomDateTextField(BuildContext context) {
+    return CustomDateTextField(
+          controller: newTaskDateTimeController,
+          context: context, // Передаем контекст для выбора даты
+          hintText: "Deadline",
+        );
+  }
+
+  CustomTextField _buildTaskNameTextField() {
+    return CustomTextField(
+      controller: newTaskNameController,
+      hintText: "",
+      prefixIcon: Icons.task,
+      labelText: "Task Name",
+      maxLines: 1,
+    );
+  }
+
+  CustomTextField _buildDescriptionTextField() {
+    return CustomTextField(
+      controller: newTaskDescriptionController,
+      hintText: "",
+      prefixIcon: Icons.description_outlined,
+      labelText: "Description",
+      maxLines: 2,
     );
   }
 
@@ -107,59 +138,6 @@ class _NewTaskPageState extends State<NewTaskPage> {
           ),
           border: InputBorder.none,
           hintText: "Date",
-        ),
-      ),
-    );
-  }
-
-  Container buildTaskDescriptionContainer() {
-    return Container(
-      margin: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: const Color.fromARGB(255, 70, 70, 70),
-      ),
-      child: TextField(
-        maxLines: 5,
-        controller: newTaskDescriptionController,
-        decoration: InputDecoration(
-          prefixIcon: const Icon(
-            Icons.description_outlined,
-            color: Colors.orange,
-          ),
-          border: InputBorder.none,
-          label: const Text(
-            "Description",
-            style: TextStyle(color: Colors.orange),
-          ),
-          alignLabelWithHint: true,
-          // Выравнивает метку и иконку по верхнему краю
-          hintStyle: TextStyle(color: Colors.grey.shade500),
-          hintText: "(Optional)",
-        ),
-      ),
-    );
-  }
-
-  Container buildTaskNameContainer() {
-    return Container(
-      margin: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: const Color.fromARGB(255, 70, 70, 70),
-      ),
-      child: TextField(
-        controller: newTaskNameController,
-        decoration: const InputDecoration(
-          prefixIcon: Icon(
-            Icons.note_alt_outlined,
-            color: Colors.orange,
-          ),
-          border: InputBorder.none,
-          label: Text(
-            "Task Name",
-            style: TextStyle(color: Colors.orange),
-          ),
         ),
       ),
     );
