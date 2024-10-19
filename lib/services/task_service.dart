@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:to_do_app_practice_2/screens/edit_task_screen.dart';
 import '../widgets/snack_bar.dart';
 import '../models/task.dart';
 import '../screens/new_task_screen.dart';
-
-
-
 
 Future<void> addTask(BuildContext context, Function resetPriority) async {
   try {
@@ -45,19 +43,19 @@ Future<void> addTask(BuildContext context, Function resetPriority) async {
   }
 }
 
-
 Future<List<Task>> getTasks() async {
   List<Task> taskList = [];
 
   try {
     QuerySnapshot querySnapshot =
-    await FirebaseFirestore.instance.collection('toDoTasks').get();
+        await FirebaseFirestore.instance.collection('toDoTasks').get();
     for (var doc in querySnapshot.docs) {
       taskList.add(Task(
         id: doc.id,
         taskName: doc['task_name'],
         taskDescription: doc['task_description'],
-        dateTime: (doc['DateTime'] as Timestamp).toDate(), // Преобразуем Timestamp в DateTime
+        dateTime: (doc['DateTime'] as Timestamp).toDate(),
+        // Преобразуем Timestamp в DateTime
         priority: doc['priority'],
       ));
     }
@@ -66,7 +64,6 @@ Future<List<Task>> getTasks() async {
   }
   return taskList;
 }
-
 
 Future<void> deleteTask(String taskId) async {
   try {
@@ -82,7 +79,8 @@ Future<void> deleteTask(String taskId) async {
 
 Future<void> setCompleted(String taskId, bool currentStatus) async {
   try {
-    print("Updating task ID: $taskId from status: $currentStatus"); // Отладочное сообщение
+    print(
+        "Updating task ID: $taskId from status: $currentStatus"); // Отладочное сообщение
     await FirebaseFirestore.instance
         .collection('toDoTasks')
         .doc(taskId)
@@ -94,3 +92,26 @@ Future<void> setCompleted(String taskId, bool currentStatus) async {
     print("Error updating task status: $e");
   }
 }
+
+Future<void> editTask(String taskId) async {
+  if (taskId.isEmpty) {
+    print("Invalid task ID: $taskId");
+    return;
+  }
+
+  try {
+    print("Updating task data: $taskId");
+    await FirebaseFirestore.instance.collection("toDoTasks").doc(taskId).update(
+      {
+        'task_name': editTaskNameController.text,
+        'task_description': editTaskDescriptionController.text,
+        'DateTime': DateFormat('MMM d, yyyy').parse(editTaskDateController.text),
+        'priority': selectedPriority,
+      },
+    );
+    print("Task updated successfully.");
+  } catch (e) {
+    print("Error updating task data: $e");
+  }
+}
+

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:to_do_app_practice_2/buttons/custom_floating_action_button.dart';
 import 'package:to_do_app_practice_2/widgets/custom_date_text_field.dart';
@@ -101,45 +100,5 @@ class _NewTaskPageState extends State<NewTaskPage> {
     );
   }
 
-  Container buildDateContainer() {
-    return Container(
-      margin: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: const Color.fromARGB(255, 70, 70, 70),
-      ),
-      child: TextField(
-        enableInteractiveSelection: false,
-        controller: newTaskDateTimeController,
-        onTap: () {
-          DatePicker.showDatePicker(context,
-              showTitleActions: true,
-              minTime: DateTime.now(),
-              maxTime: DateTime(2026, 12, 31), onChanged: (date) {
-            print('change $date');
-          }, onConfirm: (date) {
-            setState(() {
-              newTaskDateTimeController.text =
-                  DateFormat('MMM d, yyyy').format(date);
-            });
 
-            print('confirm $date');
-          }, currentTime: DateTime.now(), locale: LocaleType.en);
-        },
-        readOnly: true,
-        decoration: const InputDecoration(
-          label: Text(
-            "Deadline",
-            style: TextStyle(color: Colors.orange),
-          ),
-          prefixIcon: Icon(
-            Icons.date_range_outlined,
-            color: Colors.orange,
-          ),
-          border: InputBorder.none,
-          hintText: "Date",
-        ),
-      ),
-    );
-  }
 }

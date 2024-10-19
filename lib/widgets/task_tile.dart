@@ -9,6 +9,7 @@ import '../utils/task_prirority.dart';
 class TaskTileWidget extends StatefulWidget {
   final Task oneTask;
   final bool showTrailing;
+
   TaskTileWidget({required this.oneTask, Key? key, required this.showTrailing,})
       : super(key: Key(oneTask.id));
 
@@ -62,7 +63,14 @@ class _TaskTileWidgetState extends State<TaskTileWidget> {
                   ),
                   SlidableAction(
                     onPressed: (context) {
-                      Navigator.pushNamed(context, '/edit_task_screen');
+                      print(widget.oneTask);
+                      Navigator.pushNamed(
+                        context,
+                        '/edit_task_screen',
+                        arguments: widget.oneTask, // Передаем объект задачи как аргумент
+
+                      );
+                      print(widget.oneTask);
                     },
                     backgroundColor: const Color(0xFF21B7CA),
                     foregroundColor: Colors.white,
