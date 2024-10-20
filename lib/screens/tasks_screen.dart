@@ -8,14 +8,14 @@ import 'package:to_do_app_practice_2/widgets/task_tile.dart';
 
 import '../buttons/custom_floating_action_button.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class TasksPage extends StatefulWidget {
+  const TasksPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<TasksPage> createState() => _TasksPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _TasksPageState extends State<TasksPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,17 +65,20 @@ class _HomePageState extends State<HomePage> {
                 List<DocumentSnapshot> docs = snapshot.data!.docs;
 
                 // Преобразуем документы в список задач
-                List<Task> tasks = docs.map((doc) {
-                  return Task(
-                    id: doc.id,
-                    taskName: doc['task_name'],
-                    taskDescription: doc['task_description'],
-                    dateTime: (doc['DateTime'] as Timestamp).toDate(),
-                    priority: doc['priority'],
-                    isCompleted: doc['isCompleted'], // Используем правильное название поля
-                  );
-                }).where((task) => !task.isCompleted).toList(); // Фильтрация невыполненных задач
-// Фильтрация невыполненных задач
+                List<Task> tasks = docs
+                    .map((doc) {
+                      return Task(
+                        id: doc.id,
+                        taskName: doc['task_name'],
+                        taskDescription: doc['task_description'],
+                        dateTime: (doc['DateTime'] as Timestamp).toDate(),
+                        priority: doc['priority'],
+                        isCompleted: doc[
+                            'isCompleted'], // Используем правильное название поля
+                      );
+                    })
+                    .where((task) => !task.isCompleted)
+                    .toList(); // Фильтрация невыполненных задач
 
                 // Сортируем список задач по приоритету
                 tasks.sort((a, b) => priorityValue(b.priority)
@@ -85,8 +88,9 @@ class _HomePageState extends State<HomePage> {
                   itemCount: tasks.length,
                   itemBuilder: (BuildContext context, int index) {
                     return TaskTileWidget(
-                      oneTask: tasks[
-                          index], showTrailing: true, // Передаем каждую задачу в TaskTileWidget
+                      oneTask: tasks[index],
+                      showTrailing:
+                          true, // Передаем каждую задачу в TaskTileWidget
                     );
                   },
                 );

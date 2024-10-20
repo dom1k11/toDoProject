@@ -11,18 +11,22 @@ class _SearchBlockWidgetState extends State<SearchBlockWidget> {
   TextEditingController textFilterController = TextEditingController();
 
   @override
-
   Widget build(BuildContext context) {
     return TextField(
       controller: textFilterController,
-      decoration: const InputDecoration(
-        prefixIcon: Icon(
+      decoration: InputDecoration(
+        prefixIcon: const Icon(
           Icons.content_paste_search,
           color: Colors.orange,
         ),
-        suffixIcon: Icon(
-          Icons.search,
+        suffixIcon: IconButton(
           color: Colors.orange,
+          onPressed: () {
+            Navigator.pushNamed(context, '/');
+          },
+          icon: const Icon(
+            Icons.search,
+          ),
         ),
         border: InputBorder.none,
         hintText: "Search",
