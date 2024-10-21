@@ -53,8 +53,8 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: const Color.fromARGB(255, 53, 53, 53),
       ),
-      // home: isFirstLaunch ? WelcomePage() : const TasksPage(),
-      home : WelcomePage(),
+      home: isFirstLaunch ? WelcomePage() : const TasksPage(),
+      //home : WelcomePage(),
       initialRoute: '/',
       routes: {
         '/tasks_page': (context) => const TasksPage(),
